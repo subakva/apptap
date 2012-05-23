@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+require "rubygems"
+require "thor"
+
+if File.exists?(File.join(File.expand_path('../..', __FILE__), '.git'))
+  apptap_path = File.expand_path('../../lib', __FILE__)
+  $:.unshift(apptap_path)
+end
+
+require "apptap"
+AppTap::CLI::Root.start
