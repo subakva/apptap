@@ -15,7 +15,7 @@ module AppTap
         filter_config(service_name) do |config_name, service_config|
           say_status 'installing', config_name, :green
           if service_config['formula']
-            run("#{brew_bin} install #{service_config['formula']}")
+            run("#{brew_command} install #{service_config['formula']}")
           else
             say_status 'error', "Missing 'formula' configuration for #{config_name}.", :red
           end
