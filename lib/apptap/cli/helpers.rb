@@ -40,7 +40,9 @@ module AppTap
       end
 
       def load_config
-        YAML.load_file(File.join(destination_root, app_config_path))
+        config_path = File.join(destination_root, app_config_path)
+        config_data = File.read(config_path)
+        YAML.load(config_data) || {}
       end
 
       def filter_config(service_name, config = nil, &block)
@@ -50,7 +52,7 @@ module AppTap
           unless config.keys.include?(service_name)
             say_status 'error', "Unable to find a service called '#{service_name}'!", :red
           end
-          filtered_config = config.select { |config_name| config_name == service_name } 
+          filtered_config = config.select { |config_name| config_name == service_name }
         end
 
         if block_given?
