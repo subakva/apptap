@@ -31,6 +31,15 @@ module AppTap
         end
       end
 
+      def symlink_local_tap
+        say_status 'Setting up local Tap...', app_procfile_path, :green
+        # copy_file brew-apptap.rb .brew/Library/Contributions/cmds/brew-apptap.rb
+        # chmod +x .brew/Library/Contributions/cmds/brew-apptap.rb
+        # mkdir -p config/formulae
+        # .brew/bin/brew apptap config/formulae
+        # TODO: Figure out how to blow away and rebuild the formulae?
+      end
+
       def generate_procfile
         say_status 'updating', app_procfile_path, :green
 
