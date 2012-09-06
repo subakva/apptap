@@ -27,8 +27,20 @@ module AppTap
         File.join('config', 'apptap.yml')
       end
 
+      def app_formulae_path
+        File.join('config', 'formulae')
+      end
+
+      def app_ignore_path
+        '.gitignore'
+      end
+
       def brew_install_path
         File.join(destination_root, brew_dir)
+      end
+
+      def brew_cmds_path
+        File.join(brew_install_path, 'Library', 'Contributions', 'cmds')
       end
 
       def brew_bin
@@ -37,6 +49,10 @@ module AppTap
 
       def brew_command
         File.join(brew_bin, 'brew')
+      end
+
+      def formula_installed?(formula_name)
+        run("#{brew_command} list #{formula_name}", verbose: false, capture: true) !~ /No such keg/
       end
 
       def load_config

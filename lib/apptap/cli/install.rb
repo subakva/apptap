@@ -4,18 +4,36 @@ module AppTap
       include Thor::Actions
       include AppTap::CLI::Helpers
 
+      def self.source_root
+        File.expand_path(File.join(File.dirname(__FILE__), '../../..'))
+      end
+
       argument :service_name,
         desc: 'The name of the service to install.',
         required: false,
         type: :string
+
+      # def symlink_local_tap
+      #   say_status 'updating', 'app_formulae_path', :green
+      #   directory('templates/Library/Contributions/cmds', brew_cmds_path)
+      #   chmod File.join(brew_cmds_path, "brew-apptap.rb"), 0755
+      #   empty_directory(app_formulae_path)
+      #   run("#{brew_command} apptap #{app_formulae_path}")
+      #   # TODO: Figure out how to blow away and rebuild the formulae?
+      # end
 
       def install_services
         say "Installing services..."
 
         filter_config(service_name) do |config_name, service_config|
           say_status 'installing', config_name, :green
-          if service_config['formula']
-            run("#{brew_command} install #{service_config['formula']}")
+          formula_name = service_config['formula']
+          if formula_name
+            if formula_installed?(formula_name)
+              say_status 'error', "#{formula_name} is already installed. Use \"apptap update #{formula_name}\" to update it.", :yellow
+            else
+              run("#{brew_command} install #{formula_name}")
+            end
           else
             say_status 'error', "Missing 'formula' configuration for #{config_name}.", :red
           end
@@ -31,25 +49,18 @@ module AppTap
         end
       end
 
-      def symlink_local_tap
-        say_status 'Setting up local Tap...', app_procfile_path, :green
-        # copy_file brew-apptap.rb .brew/Library/Contributions/cmds/brew-apptap.rb
-        # chmod +x .brew/Library/Contributions/cmds/brew-apptap.rb
-        # mkdir -p config/formulae
-        # .brew/bin/brew apptap config/formulae
-        # TODO: Figure out how to blow away and rebuild the formulae?
-      end
 
       def generate_procfile
         say_status 'updating', app_procfile_path, :green
 
         filter_config(service_name) do |config_name, service_config|
+          command = service_config['command']
+          next if command.nil?
+
           say_status 'adding', config_name, :green
 
           insert_into_file(app_procfile_path, after: "#{procfile_config_start_token}\n") do
-            command = service_config['command']
             process_name = config_name
-
             "#{process_name}: #{File.join(brew_bin, command)}\n"
           end
         end
