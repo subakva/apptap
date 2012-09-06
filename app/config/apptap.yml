@@ -6,3 +6,5 @@
 
 make_awesome:
   formula: make_awesome
+make_awesomer:
+  formula: make_awesomer

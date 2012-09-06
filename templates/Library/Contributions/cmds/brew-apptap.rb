@@ -10,6 +10,7 @@ module Homebrew extend self
     raise "Already tapped!" if tapd.directory?
     raise "Not a directory: #{tap_source_path}" unless Pathname.new(tap_source_path).directory?
 
+    FileUtils.mkdir_p(taps_dir)
     relative_path = Pathname.new(tap_source_path).relative_path_from(taps_dir)
     FileUtils.ln_s(relative_path, tapd)
     raise "Unable to copy files!" unless tapd.directory?

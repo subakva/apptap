@@ -52,7 +52,8 @@ module AppTap
       end
 
       def formula_installed?(formula_name)
-        run("#{brew_command} list #{formula_name}", verbose: false, capture: true) !~ /No such keg/
+        result = run("#{brew_command} list #{formula_name}", verbose: false, capture: true)
+        result =~ Regexp.new("Cellar/#{formula_name}") && result !~ /No such keg/
       end
 
       def load_config

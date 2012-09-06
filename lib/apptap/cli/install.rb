@@ -13,15 +13,6 @@ module AppTap
         required: false,
         type: :string
 
-      # def symlink_local_tap
-      #   say_status 'updating', 'app_formulae_path', :green
-      #   directory('templates/Library/Contributions/cmds', brew_cmds_path)
-      #   chmod File.join(brew_cmds_path, "brew-apptap.rb"), 0755
-      #   empty_directory(app_formulae_path)
-      #   run("#{brew_command} apptap #{app_formulae_path}")
-      #   # TODO: Figure out how to blow away and rebuild the formulae?
-      # end
-
       def install_services
         say "Installing services..."
 
@@ -30,7 +21,7 @@ module AppTap
           formula_name = service_config['formula']
           if formula_name
             if formula_installed?(formula_name)
-              say_status 'error', "#{formula_name} is already installed. Use \"apptap update #{formula_name}\" to update it.", :yellow
+              say_status 'installed', "#{formula_name} is already installed. Use \"apptap update #{formula_name}\" to update it.", :yellow
             else
               run("#{brew_command} install #{formula_name}")
             end
