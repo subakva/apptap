@@ -18,8 +18,8 @@ Gem::Specification.new do |gem|
   gem.add_dependency("thor")
   gem.add_dependency("foreman")
 
-  # gem.add_development_dependency("rake", ['~> 0.9.2'])
-  # gem.add_development_dependency("rspec", ['~> 2.9.0'])
+  gem.add_development_dependency("rake", ['~> 0.9.2'])
+  gem.add_development_dependency("rspec", ['~> 2.11.0'])
   # gem.add_development_dependency("simplecov", ['~> 0.6.2'])
   # gem.add_development_dependency("cane", ['~> 1.3.0'])
   # gem.add_development_dependency("yard", ['~> 0.7.5'])

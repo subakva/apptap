@@ -3,14 +3,15 @@ require 'fileutils'
 
 module Homebrew extend self
   def install_apptap tap_source_path
+    tap_source_path = File.expand_path(tap_source_path)
     taps_dir = HOMEBREW_LIBRARY/"Taps"
     tapd = taps_dir/"local-formulae"
 
     raise "Already tapped!" if tapd.directory?
     raise "Not a directory: #{tap_source_path}" unless Pathname.new(tap_source_path).directory?
 
-    FileUtils.mkdir_p(taps_dir)
-    FileUtils.cp_r(tap_source_path, tapd)
+    relative_path = Pathname.new(tap_source_path).relative_path_from(taps_dir)
+    FileUtils.ln_s(relative_path, tapd)
     raise "Unable to copy files!" unless tapd.directory?
 
     files = []
