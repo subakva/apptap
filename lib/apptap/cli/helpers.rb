@@ -39,8 +39,8 @@ module AppTap
         File.join(destination_root, brew_dir)
       end
 
-      def brew_cmds_path
-        File.join(brew_install_path, 'Library', 'Contributions', 'cmds')
+      def brew_cmd_path
+        File.join(brew_install_path, 'Library', 'Contributions', 'cmd')
       end
 
       def brew_bin

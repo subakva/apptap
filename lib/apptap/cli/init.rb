@@ -33,8 +33,8 @@ module AppTap
 
       def symlink_local_tap
         say_status 'tapping', app_formulae_path, :green
-        directory('templates/Library/Contributions/cmds', brew_cmds_path, force: true)
-        chmod File.join(brew_cmds_path, "brew-apptap.rb"), 0755
+        directory('templates/Library/Contributions/cmd', brew_cmd_path, force: true)
+        chmod File.join(brew_cmd_path, 'brew-apptap.rb'), 0755
         run("#{brew_command} apptap #{app_formulae_path}")
       end
     end
