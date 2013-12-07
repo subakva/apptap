@@ -1,2 +1,8 @@
+SignalException:
+  Enabled: false
+
+AlignParameters:
+  Enabled: false
+
 LineLength:
   Max: 100

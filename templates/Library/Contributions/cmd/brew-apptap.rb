@@ -1,8 +1,10 @@
-require HOMEBREW_REPOSITORY/"Library/Homebrew/cmd/tap"
+require HOMEBREW_REPOSITORY / 'Library/Homebrew/cmd/tap'
 require 'fileutils'
 
-module Homebrew extend self
-  def install_apptap tap_source_path
+# Defines an apptap command for homebrew that configures homebrew to load
+# formulae from a folder within the application.
+module Homebrew
+  def install_apptap(tap_source_path)
     tap_source_path = File.expand_path(tap_source_path)
     taps_dir = HOMEBREW_LIBRARY / 'Taps'
     tapd = taps_dir / 'local-formulae'
@@ -20,12 +22,14 @@ module Homebrew extend self
     tapped = link_tap_formula(files)
     puts "Tapped #{tapped} formula"
   end
+  module_function :install_apptap
 
   def apptap
     tap_source_path = ARGV.first
     raise 'Invalid usage' unless tap_source_path
     install_apptap(tap_source_path)
   end
+  module_function :apptap
 end
 
 Homebrew.apptap

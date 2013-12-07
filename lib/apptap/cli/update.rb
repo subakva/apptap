@@ -1,5 +1,6 @@
 module AppTap
   module CLI
+    # Defines an action for updating app services.
     class Update < Thor::Group
       include Thor::Actions
       include AppTap::CLI::Helpers
@@ -14,7 +15,7 @@ module AppTap
         type: :string
 
       def update_service
-        say "Updating services..."
+        say 'Updating services...'
 
         filter_config(service_name) do |config_name, service_config|
           say_status 'updating', config_name, :green

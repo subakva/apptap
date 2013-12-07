@@ -1,5 +1,6 @@
 module AppTap
   module CLI
+    # Defines an action for managing the formean config for app services.
     class Foreman < Thor
       include Thor::Actions
       include AppTap::CLI::Helpers

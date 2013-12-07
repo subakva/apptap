@@ -1,5 +1,6 @@
 module AppTap
   module CLI
+    # Defines an action for initializing an app to use apptap services.
     class Init < Thor::Group
       include Thor::Actions
       include AppTap::CLI::Helpers

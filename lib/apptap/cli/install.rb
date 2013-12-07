@@ -1,5 +1,6 @@
 module AppTap
   module CLI
+    # Defines an action for installing app services.
     class Install < Thor::Group
       include Thor::Actions
       include AppTap::CLI::Helpers
@@ -14,14 +15,18 @@ module AppTap
         type: :string
 
       def install_services
-        say "Installing services..."
+        say 'Installing services...'
 
         filter_config(service_name) do |config_name, service_config|
           say_status 'installing', config_name, :green
           formula_name = service_config['formula']
           if formula_name
             if formula_installed?(formula_name)
-              say_status 'installed', "#{formula_name} is already installed. Use \"apptap update #{formula_name}\" to update it.", :yellow
+              message = [
+                "#{formula_name} is already installed.",
+                "Use \"apptap update #{formula_name}\" to update it.",
+              ].join(' ')
+              say_status('installed', message, :yellow)
             else
               run("#{brew_command} install #{formula_name}")
             end
@@ -34,12 +39,14 @@ module AppTap
       def reset_procfile
         say_status 'resetting', app_procfile_path, :green
 
-        apptap_section_regexp = Regexp.new("#{procfile_config_start_token}(.*)#{procfile_config_end_token}", Regexp::MULTILINE)
+        apptap_section_regexp = Regexp.new(
+          "#{procfile_config_start_token}(.*)#{procfile_config_end_token}",
+          Regexp::MULTILINE
+        )
         gsub_file app_procfile_path, apptap_section_regexp do |match|
           "#{procfile_config_start_token}\n#{procfile_config_end_token}"
         end
       end
-
 
       def generate_procfile
         say_status 'updating', app_procfile_path, :green

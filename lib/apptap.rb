@@ -1,4 +1,4 @@
-require "apptap/version"
+require 'apptap/version'
 require 'thor'
 require 'thor/group'
 
@@ -11,11 +11,13 @@ require 'apptap/cli/uninstall'
 
 module AppTap
   module CLI
+    # Defines the root of the apptap command. This registers all the subcommands that can be used.
     class Root < Thor
       include Thor::Actions
 
       register AppTap::CLI::Init, 'init', 'init', 'Creates a sample apptap configuration file.'
-      register AppTap::CLI::Install, 'install', 'install [SERVICE_NAME]', 'Installs SERVICE_NAME. If SERVICE_NAME is empty, installs all configured services.'
+      register AppTap::CLI::Install, 'install', 'install [SERVICE_NAME]',
+        'Installs SERVICE_NAME. If SERVICE_NAME is empty, installs all configured services.'
       register AppTap::CLI::Update, 'update', 'update [SERVICE_NAME]', 'Updates SERVICE_NAME.'
       register AppTap::CLI::Foreman, 'foreman', 'foreman [COMMAND]', 'Executes a foreman command.'
       register AppTap::CLI::Uninstall, 'uninstall', 'uninstall', 'Uninstalls apptap'

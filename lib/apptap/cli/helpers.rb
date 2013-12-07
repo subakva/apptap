@@ -2,6 +2,7 @@ require 'yaml'
 
 module AppTap
   module CLI
+    # Defines common configuration and helper methods used within thor actions
     module Helpers
       def brew_dir
         '.brew'
@@ -63,7 +64,7 @@ module AppTap
       end
 
       def filter_config(service_name, config = nil, &block)
-        config ||= self.load_config
+        config ||= load_config
         filtered_config = config
         if service_name && service_name.length > 0
           unless config.keys.include?(service_name)

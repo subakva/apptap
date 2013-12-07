@@ -1,5 +1,6 @@
 require 'formula'
 
+# Makes the system more awesome.
 class MakeAwesome < Formula
   homepage 'https://github.com/subakva/apptap'
   url 'https://github.com/downloads/subakva/apptap/make_awesome.sh'
