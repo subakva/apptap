@@ -19,5 +19,5 @@ tmp
 *.sublime-*
 
 .brew
-config
+./app
 
