@@ -4,8 +4,8 @@ module AppTap
   module CLI
     # Defines common configuration and helper methods used within thor actions
     module Helpers
-      def brew_dir
-        '.brew'
+      def brew_path
+        Pathname.new('.brew')
       end
 
       def brew_repo_url
@@ -37,7 +37,7 @@ module AppTap
       end
 
       def brew_install_path
-        File.join(destination_root, brew_dir)
+        File.join(destination_root, brew_path)
       end
 
       def brew_cmd_path

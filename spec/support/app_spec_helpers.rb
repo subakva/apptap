@@ -1,29 +1,96 @@
-module AppSpecHelpers
-  def app_dir
-    './tmp/app'
+module AppSpecHelpers extend self
+  def app_root_path
+    Pathname.new('./tmp/app')
   end
 
-  def config_dir
-    File.join(app_dir , 'config')
+  def app_config_path
+    app_root_path + 'config'
   end
 
-  def formulae_dir
-    File.join(config_dir , 'formulae')
+  def app_formulae_path
+    app_config_path + 'formulae'
   end
 
-  def brew_install_dir
-    File.join(app_dir , '.brew')
+  def app_config_yml_path
+    app_config_path + 'apptap.yml'
   end
 
-  def apptap_config_path
-    File.join(config_dir , 'apptap.yml')
+  def app_procfile_path
+    app_root_path + 'Procfile.dev'
   end
 
-  def procfile_path
-    File.join(app_dir , 'Procfile.dev')
+  def app_gitignore_path
+    app_root_path + '.gitignore'
   end
 
-  def gitignore_path
-    File.join(app_dir , '.gitignore')
+  def brew_install_path
+    app_root_path + '.brew'
+  end
+
+  def brew_apptap_path
+    brew_install_path + 'Library' + 'Contributions' + 'cmd' + 'brew-apptap.rb'
+  end
+
+  def brew_local_tap_path
+    brew_install_path + 'Library' + 'Taps' + 'local-formulae'
+  end
+
+  def brew_linked_formula_path
+    brew_install_path + 'Library' + 'Formula' + 'make_awesome.rb'
+  end
+
+  def formula_fixture_path
+    File.expand_path('../../../spec/fixtures/make_awesome.rb', __FILE__)
+  end
+
+  def add_local_formula
+    FileUtils.cp(formula_fixture_path, app_formulae_path)
+  end
+
+  def remove_local_formula
+    FileUtils.rm_rf(app_formulae_path + 'make_awesome.rb')
+  end
+
+  def call_apptap(command)
+    FileUtils.chdir(app_root_path) do
+      # system "bundle exec apptap #{command}"
+      `bundle exec apptap #{command}`
+    end
+  end
+end
+
+RSpec.configure do |config|
+  config.include AppSpecHelpers
+
+  # Initialize everything once before the suite for speedier tests. Tests should be able to
+  # assume that init has been run and there are no linked formulae or services installed.
+  config.before(:suite) do
+    FileUtils.mkdir_p(AppSpecHelpers.app_root_path)
+    FileUtils.cp('./spec/fixtures/Gemfile', File.join(AppSpecHelpers.app_root_path))
+    FileUtils.touch(AppSpecHelpers.app_gitignore_path)
+    FileUtils.chdir(AppSpecHelpers.app_root_path) do
+      `bundle`
+    end
+    AppSpecHelpers.call_apptap('init')
+  end
+
+  # Delete everything but homebrew (need a task to reset that, too)
+  config.after(:suite) do
+    [
+      AppSpecHelpers.brew_local_tap_path,
+      AppSpecHelpers.brew_linked_formula_path,
+      AppSpecHelpers.brew_apptap_path,
+      AppSpecHelpers.app_config_path,
+      AppSpecHelpers.app_procfile_path,
+      AppSpecHelpers.app_gitignore_path,
+    ].each do |path_to_delete|
+      FileUtils.rm_rf(path_to_delete)
+    end
+  end
+
+  # Just remove formulae after each spec.
+  config.after(:each) do
+    FileUtils.rm_rf(brew_linked_formula_path)
+    FileUtils.rm_rf(app_formulae_path + '*')
   end
 end
