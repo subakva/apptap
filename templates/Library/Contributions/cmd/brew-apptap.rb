@@ -4,25 +4,24 @@ require 'fileutils'
 # Defines an apptap command for homebrew that configures homebrew to load
 # formulae from a folder within the application.
 module Homebrew
+  def apptap_taps_dir
+    HOMEBREW_LIBRARY / 'Taps'
+  end
+
+  def apptap_formulae_dir
+    apptap_taps_dir / 'local-formulae'
+  end
+
   def install_apptap(tap_source_path)
     tap_source_path = File.expand_path(tap_source_path)
-    taps_dir = HOMEBREW_LIBRARY / 'Taps'
-    tapd = taps_dir / 'local-formulae'
 
-    raise 'Already tapped!' if tapd.directory?
     raise "Not a directory: #{tap_source_path}" unless Pathname.new(tap_source_path).directory?
 
-    FileUtils.mkdir_p(taps_dir)
-    relative_path = Pathname.new(tap_source_path).relative_path_from(taps_dir)
-    FileUtils.ln_s(relative_path, tapd)
-    raise 'Unable to copy files!' unless tapd.directory?
-
-    files = []
-    tapd.find_formula { |file| files << tapd.basename.join(file) }
-    tapped = link_tap_formula(files)
-    puts "Tapped #{tapped} formula"
+    FileUtils.mkdir_p(apptap_taps_dir)
+    FileUtils.rm_rf(apptap_formulae_dir)
+    FileUtils.cp_r(tap_source_path, apptap_formulae_dir)
+    repair_taps
   end
-  module_function :install_apptap
 
   def apptap
     tap_source_path = ARGV.first

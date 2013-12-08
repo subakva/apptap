@@ -1,34 +1,6 @@
 require 'spec_helper'
 
-describe 'apptap' do
-  def app_dir
-    './tmp/app'
-  end
-
-  def config_dir
-    File.join(app_dir , 'config')
-  end
-
-  def formulae_dir
-    File.join(config_dir , 'formulae')
-  end
-
-  def brew_install_dir
-    File.join(app_dir , '.brew')
-  end
-
-  def apptap_config_path
-    File.join(config_dir , 'apptap.yml')
-  end
-
-  def procfile_path
-    File.join(app_dir , 'Procfile.dev')
-  end
-
-  def gitignore_path
-    File.join(app_dir , '.gitignore')
-  end
-
+describe 'apptap init' do
   before(:all) do
     FileUtils.mkdir_p(app_dir)
     FileUtils.cp('./spec/fixtures/Gemfile', File.join(app_dir))
@@ -66,6 +38,10 @@ describe 'apptap' do
   end
 
   it 'taps local formulae' do
-    File.symlink?(File.join(brew_install_dir, 'Library', 'Taps', 'local-formulae')).should be_true
+    FileUtils.cp('./spec/fixtures/make_awesome.rb', File.join(formulae_dir))
+    FileUtils.chdir(app_dir) do
+      `bundle exec apptap init`
+    end
+    File.symlink?(File.join(brew_install_dir, 'Library', 'Formula', 'make_awesome.rb')).should be_true
   end
 end
