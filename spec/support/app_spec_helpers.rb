@@ -44,17 +44,24 @@ module AppSpecHelpers extend self
   end
 
   def add_local_formula
-    FileUtils.cp(formula_fixture_path, app_formulae_path)
+    FileUtils.cp(formula_fixture_path, app_formulae_path, :verbose => spec_debug?)
   end
 
   def remove_local_formula
-    FileUtils.rm_rf(app_formulae_path + 'make_awesome.rb')
+    FileUtils.rm_rf(app_formulae_path + 'make_awesome.rb', :verbose => spec_debug?)
+  end
+
+  def spec_debug?
+    %w{1 yes true y}.include?(ENV['DEBUG'].to_s.downcase)
   end
 
   def call_apptap(command)
     FileUtils.chdir(app_root_path) do
-      # system "bundle exec apptap #{command}"
-      `bundle exec apptap #{command}`
+      if spec_debug?
+        system "bundle exec apptap #{command}"
+      else
+        `bundle exec apptap #{command}`
+      end
     end
   end
 end
