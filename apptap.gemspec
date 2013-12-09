@@ -20,6 +20,7 @@ Gem::Specification.new do |gem|
 
   gem.add_development_dependency('rake', ['~> 10.1.0'])
   gem.add_development_dependency('rspec', ['~> 2.14.0'])
+  gem.add_development_dependency('awesome_print', ['~> 1.2.0'])
   # gem.add_development_dependency('simplecov', ['~> 0.6.2'])
   # gem.add_development_dependency('cane', ['~> 1.3.0'])
   # gem.add_development_dependency('yard', ['~> 0.7.5'])

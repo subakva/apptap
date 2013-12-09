@@ -39,8 +39,20 @@ module AppSpecHelpers extend self
     brew_install_path + 'Library' + 'Formula' + 'make_awesome.rb'
   end
 
+  def brew_linked_formula_binary
+    brew_install_path + 'bin' + 'make_awesome.sh'
+  end
+
   def formula_fixture_path
     File.expand_path('../../../spec/fixtures/make_awesome.rb', __FILE__)
+  end
+
+  def config_fixture_path
+    File.expand_path('../../../spec/fixtures/apptap.yml', __FILE__)
+  end
+
+  def add_config_with_formula
+    FileUtils.cp(config_fixture_path, app_config_path, :verbose => spec_debug?)
   end
 
   def add_local_formula
@@ -97,7 +109,15 @@ RSpec.configure do |config|
 
   # Just remove formulae after each spec.
   config.after(:each) do
-    FileUtils.rm_rf(brew_linked_formula_path)
-    FileUtils.rm_rf(app_formulae_path + '*')
+    [
+      brew_install_path + 'Cellar' + 'make_awesome',
+      brew_install_path + 'Library' + 'LinkedKegs' + 'make_awesome',
+      brew_install_path + 'opt' + 'make_awesome',
+      brew_linked_formula_binary,
+      brew_linked_formula_path,
+      app_formulae_path + '*'
+    ].each do |path_to_delete|
+      FileUtils.rm_rf(path_to_delete)
+    end
   end
 end

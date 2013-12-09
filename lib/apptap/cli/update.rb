@@ -11,10 +11,15 @@ module AppTap
 
       def update_formulae
         say 'Updating formulae...'
-        run("#{brew_command} apptap #{app_formulae_path}")
+        run_brew("apptap #{app_formulae_dir}")
       end
 
       def install_missing_services
+        say 'Installing services...'
+        config = load_config
+        config.each do |service_name, service_config|
+          install_service(service_name, service_config)
+        end
       end
     end
   end
